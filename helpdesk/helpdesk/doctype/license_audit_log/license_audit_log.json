@@ -1,0 +1,111 @@
+{
+  "doctype": "DocType",
+  "name": "License Audit Log",
+  "module": "Helpdesk",
+  "engine": "InnoDB",
+  "autoname": "naming_series:",
+  "allow_rename": 1,
+  "row_format": "Dynamic",
+  "index_web_pages_for_search": 1,
+  "title_field": "subject",
+  "subject_field": "subject",
+  "search_fields": "action,status,instance_id,license_key_mask,source,request_id,session_id",
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "track_changes": 1,
+  "track_seen": 1,
+
+  "field_order": [
+    "overview_tab",
+    "overview_section",
+    "naming_series",
+    "subject",
+    "action",
+    "status",
+    "source",
+    "cb_overview_1",
+    "event_ts",
+    "user",
+    "ip_address",
+    "notes",
+
+    "license_tab",
+    "license_section",
+    "license_key_mask",
+    "instance_id",
+    "site_name",
+    "app_version",
+    "expires_at",
+    "offline_grace_minutes",
+    "cache_snapshot",
+
+    "tech_tab",
+    "tech_section",
+    "request_id",
+    "session_id",
+    "signature_valid",
+    "headers_hash",
+    "payload_hash",
+    "error_code",
+    "error_message",
+
+    "meta_tab",
+    "attachment"
+  ],
+
+  "fields": [
+    { "fieldname": "overview_tab", "fieldtype": "Tab Break", "label": "Overview" },
+    { "fieldname": "overview_section", "fieldtype": "Section Break", "label": "Event Overview", "options": "fa fa-id-badge" },
+    { "fieldname": "naming_series", "fieldtype": "Select", "label": "Series", "options": "LAL-.YYYY.-.########", "default": "LAL-.YYYY.-.########", "reqd": 1 },
+    { "fieldname": "subject", "fieldtype": "Data", "label": "Subject", "in_global_search": 1, "bold": 1, "reqd": 1 },
+    { "fieldname": "action", "fieldtype": "Select", "label": "Action", "options": "Activate\nDeactivate\nVerify\nHeartbeat\nRefresh\nError", "in_list_view": 1, "in_standard_filter": 1, "reqd": 1 },
+    { "fieldname": "status", "fieldtype": "Select", "label": "Status", "options": "OK\nFAIL\nWARN", "default": "OK", "in_list_view": 1, "in_standard_filter": 1 },
+    { "fieldname": "source", "fieldtype": "Select", "label": "Source", "options": "Server\nClient\nn8n\nScheduler\nAdmin", "in_standard_filter": 1 },
+
+    { "fieldname": "cb_overview_1", "fieldtype": "Column Break" },
+    { "fieldname": "event_ts", "fieldtype": "Datetime", "label": "Event Time", "read_only": 1 },
+    { "fieldname": "user", "fieldtype": "Link", "label": "User", "options": "User" },
+    { "fieldname": "ip_address", "fieldtype": "Data", "label": "IP Address" },
+    { "fieldname": "notes", "fieldtype": "Small Text", "label": "Notes" },
+
+    { "fieldname": "license_tab", "fieldtype": "Tab Break", "label": "License" },
+    { "fieldname": "license_section", "fieldtype": "Section Break", "label": "License Context", "options": "fa fa-key" },
+    { "fieldname": "license_key_mask", "fieldtype": "Data", "label": "License Key (masked)", "read_only": 1 },
+    { "fieldname": "instance_id", "fieldtype": "Data", "label": "Instance ID (hash)", "in_standard_filter": 1, "read_only": 1 },
+    { "fieldname": "site_name", "fieldtype": "Data", "label": "Site" },
+    { "fieldname": "app_version", "fieldtype": "Data", "label": "App Version" },
+    { "fieldname": "expires_at", "fieldtype": "Datetime", "label": "Expires At" },
+    { "fieldname": "offline_grace_minutes", "fieldtype": "Int", "label": "Offline Grace (min)", "default": "0" },
+    { "fieldname": "cache_snapshot", "fieldtype": "Check", "label": "Cached Snapshot Used", "default": "0" },
+
+    { "fieldname": "tech_tab", "fieldtype": "Tab Break", "label": "Technical" },
+    { "fieldname": "tech_section", "fieldtype": "Section Break", "label": "Request & Signature", "options": "fa fa-shield" },
+    { "fieldname": "request_id", "fieldtype": "Data", "label": "Request ID" },
+    { "fieldname": "session_id", "fieldtype": "Data", "label": "Session ID" },
+    { "fieldname": "signature_valid", "fieldtype": "Check", "label": "Signature Valid", "default": "0", "permlevel": 1, "read_only": 1 },
+    { "fieldname": "headers_hash", "fieldtype": "Data", "label": "Headers Hash", "permlevel": 1, "read_only": 1 },
+    { "fieldname": "payload_hash", "fieldtype": "Data", "label": "Payload Hash", "permlevel": 1, "read_only": 1 },
+    { "fieldname": "error_code", "fieldtype": "Data", "label": "Error Code" },
+    { "fieldname": "error_message", "fieldtype": "Small Text", "label": "Error Message" },
+
+    { "fieldname": "meta_tab", "fieldtype": "Tab Break", "label": "Meta" },
+    { "fieldname": "attachment", "fieldtype": "Attach", "label": "Attachment" }
+  ],
+
+  "permissions": [
+    { "role": "System Manager", "read": 1, "write": 1, "create": 1, "delete": 1, "email": 1, "print": 1, "report": 1, "export": 1, "share": 1 },
+
+    { "role": "AI Admin", "read": 1, "write": 1, "delete": 1, "email": 1, "print": 1, "report": 1, "export": 1, "share": 1 },
+
+    { "role": "Integration Bot", "create": 1, "read": 1 },
+
+    { "role": "Auditor", "read": 1, "report": 1, "export": 1 },
+
+    { "role": "Product Analyst", "read": 1, "report": 1, "export": 1 }
+  ],
+
+  "states": [],
+  "links": [],
+  "actions": [],
+  "grid_page_length": 50
+}

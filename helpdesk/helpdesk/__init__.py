@@ -1,0 +1,2 @@
+from helpdesk.api.license_guard import install_global_http_guard
+install_global_http_guard()

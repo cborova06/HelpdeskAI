@@ -1,0 +1,19 @@
+/* 1) Desk list sayfalarını tam genişlik yap */
+.app-page .layout-main-section,
+.app-page .frappe-list,
+.app-page .page-form,
+.app-page .result {
+  max-width: 100% !important;
+  width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* 2) Geniş ekranda iç boşluğu biraz aç (isteğe bağlı) */
+.app-page .layout-main-section { padding-left: 8px; padding-right: 8px; }
+
+/* 3) Çok sütunlu listelerde yatay kaydırmaya izin ver (gerekirse) */
+.app-page .frappe-list .result { overflow-x: auto; }
+
+/* 4) Kart kenarlığını yumuşat (isteğe bağlı) */
+.app-page .layout-main-section.frappe-card { border-radius: 10px; }

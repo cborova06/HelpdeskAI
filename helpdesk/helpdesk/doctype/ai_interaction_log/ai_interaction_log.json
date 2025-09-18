@@ -1,0 +1,116 @@
+{
+  "doctype": "DocType",
+  "name": "AI Interaction Log",
+  "module": "Helpdesk",
+  "engine": "InnoDB",
+  "autoname": "naming_series:",
+  "allow_rename": 1,
+  "row_format": "Dynamic",
+  "index_web_pages_for_search": 1,
+  "title_field": "subject",
+  "subject_field": "subject",
+  "search_fields": "status,provider,model,direction,request_id,session_id,ticket,action,source",
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "track_changes": 1,
+  "track_seen": 1,
+
+  "field_order": [
+    "overview_tab",
+    "overview_section",
+    "naming_series",
+    "subject",
+    "ticket",
+    "action",
+    "source",
+    "direction",
+    "status",
+    "preview",
+    "provider",
+    "model",
+    "cb_overview_1",
+    "tokens",
+    "cost_usd",
+    "request_id",
+    "session_id",
+    "event_ts",
+
+    "request_tab",
+    "request_section",
+    "request_json",
+    "request_payload",
+    "headers",
+
+    "response_tab",
+    "response_section",
+    "result_json",
+    "response_payload",
+    "error_message",
+
+    "meta_tab",
+    "meta_json",
+    "user",
+    "ip_address",
+    "attachment"
+  ],
+
+  "fields": [
+    { "fieldname": "overview_tab", "fieldtype": "Tab Break", "label": "Overview" },
+    { "fieldname": "overview_section", "fieldtype": "Section Break", "label": "Overview", "options": "fa fa-microchip" },
+    { "fieldname": "naming_series", "fieldtype": "Select", "label": "Series", "options": "AIL-.YYYY.-.########", "default": "AIL-.YYYY.-.########", "reqd": 1 },
+    { "fieldname": "subject", "fieldtype": "Data", "label": "Subject", "bold": 1, "reqd": 0, "in_global_search": 1 },
+
+    { "fieldname": "ticket", "fieldtype": "Link", "label": "Ticket", "options": "HD Ticket", "in_standard_filter": 1 },
+    { "fieldname": "action", "fieldtype": "Data", "label": "Action", "in_standard_filter": 1 },
+    { "fieldname": "source", "fieldtype": "Select", "label": "Source", "options": "ingest\nreply\nflow", "in_standard_filter": 1 },
+
+    { "fieldname": "direction", "fieldtype": "Select", "label": "Direction", "options": "Request\nResponse", "in_list_view": 1, "in_standard_filter": 1 },
+    { "fieldname": "status", "fieldtype": "Select", "label": "Status", "options": "OK\nFAIL\nWARN\nTimeout\nError", "default": "OK", "in_list_view": 1, "in_standard_filter": 1 },
+    { "fieldname": "preview", "fieldtype": "Check", "label": "Preview (Shadow)" },
+
+    { "fieldname": "provider", "fieldtype": "Data", "label": "Provider", "in_standard_filter": 1 },
+    { "fieldname": "model", "fieldtype": "Data", "label": "Model", "in_standard_filter": 1 },
+
+    { "fieldname": "cb_overview_1", "fieldtype": "Column Break" },
+    { "fieldname": "tokens", "fieldtype": "Int", "label": "Tokens", "read_only": 1 },
+    { "fieldname": "cost_usd", "fieldtype": "Currency", "label": "Cost (USD)", "options": "USD", "read_only": 1 },
+    { "fieldname": "request_id", "fieldtype": "Data", "label": "Request ID", "in_standard_filter": 1 },
+    { "fieldname": "session_id", "fieldtype": "Data", "label": "Session ID", "in_standard_filter": 1 },
+    { "fieldname": "event_ts", "fieldtype": "Datetime", "label": "Event Timestamp", "read_only": 1 },
+
+    { "fieldname": "request_tab", "fieldtype": "Tab Break", "label": "Request" },
+    { "fieldname": "request_section", "fieldtype": "Section Break", "label": "Request Details", "options": "fa fa-arrow-up" },
+    { "fieldname": "request_json", "fieldtype": "Code", "label": "Request JSON", "options": "JSON" },
+    { "fieldname": "request_payload", "fieldtype": "Code", "label": "Request Payload", "options": "JSON" },
+    { "fieldname": "headers", "fieldtype": "Code", "label": "Headers", "options": "JSON" },
+
+    { "fieldname": "response_tab", "fieldtype": "Tab Break", "label": "Response" },
+    { "fieldname": "response_section", "fieldtype": "Section Break", "label": "Response Details", "options": "fa fa-arrow-down" },
+    { "fieldname": "result_json", "fieldtype": "Code", "label": "Result JSON", "options": "JSON" },
+    { "fieldname": "response_payload", "fieldtype": "Code", "label": "Response Payload", "options": "JSON" },
+    { "fieldname": "error_message", "fieldtype": "Small Text", "label": "Error Message" },
+
+    { "fieldname": "meta_tab", "fieldtype": "Tab Break", "label": "Meta" },
+    { "fieldname": "meta_json", "fieldtype": "Code", "label": "Meta JSON", "options": "JSON" },
+    { "fieldname": "user", "fieldtype": "Link", "label": "User", "options": "User" },
+    { "fieldname": "ip_address", "fieldtype": "Data", "label": "IP Address" },
+    { "fieldname": "attachment", "fieldtype": "Attach", "label": "Attachment" }
+  ],
+
+  "permissions": [
+    { "role": "System Manager", "read": 1, "write": 1, "create": 1, "delete": 1, "email": 1, "print": 1, "report": 1, "export": 1, "share": 1 },
+
+    { "role": "Integration Bot", "create": 1, "read": 1 },
+
+    { "role": "AI Admin", "read": 1, "write": 1, "delete": 1, "email": 1, "print": 1, "report": 1, "export": 1, "share": 1 },
+
+    { "role": "Support Team", "read": 1, "report": 1, "export": 1 },
+    { "role": "Product Analyst", "read": 1, "report": 1, "export": 1 },
+    { "role": "Auditor", "read": 1, "report": 1, "export": 1 }
+  ],
+
+  "states": [],
+  "links": [],
+  "actions": [],
+  "grid_page_length": 50
+}

@@ -1,0 +1,103 @@
+{
+  "doctype": "DocType",
+  "name": "Knowledge Base Update Request",
+  "module": "Helpdesk",
+  "engine": "InnoDB",
+  "autoname": "naming_series:",
+  "allow_rename": 1,
+  "row_format": "Dynamic",
+  "index_web_pages_for_search": 1,
+  "title_field": "subject",
+  "subject_field": "subject",
+  "search_fields": "status,subject,change_type,priority,target_doctype,target_name",
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "track_changes": 1,
+  "track_seen": 1,
+
+  "field_order": [
+    "overview_tab",
+    "overview_section",
+    "naming_series",
+    "subject",
+    "status",
+    "change_type",
+    "priority",
+    "cb_overview_1",
+    "requester",
+    "target_doctype",
+    "target_name",
+    "target_path",
+    "tags",
+
+    "content_tab",
+    "content_section",
+    "current_summary",
+    "proposed_changes",
+    "references",
+    "attachment",
+    "breaking_change",
+
+    "review_tab",
+    "review_section",
+    "reviewer",
+    "review_comment",
+    "decided_by",
+    "decided_on",
+
+    "meta_tab"
+  ],
+
+  "fields": [
+    { "fieldname": "overview_tab", "fieldtype": "Tab Break", "label": "Overview" },
+    { "fieldname": "overview_section", "fieldtype": "Section Break", "label": "Request Overview", "options": "fa fa-book" },
+    { "fieldname": "naming_series", "fieldtype": "Select", "label": "Series", "options": "KBUR-.YYYY.-.#####", "default": "KBUR-.YYYY.-.#####", "reqd": 1 },
+    { "fieldname": "subject", "fieldtype": "Data", "label": "Subject", "bold": 1, "reqd": 1, "in_global_search": 1, "in_standard_filter": 1 },
+    { "fieldname": "status", "fieldtype": "Select", "label": "Status", "options": "Open\nApproved\nRejected", "default": "Open", "in_list_view": 1, "in_standard_filter": 1, "no_copy": 1 },
+    { "fieldname": "change_type", "fieldtype": "Select", "label": "Change Type", "options": "Fix\nUpdate\nNew Article\nDeprecate", "in_list_view": 1, "in_standard_filter": 1 },
+    { "fieldname": "priority", "fieldtype": "Select", "label": "Priority", "options": "Low\nMedium\nHigh\nCritical", "in_list_view": 1, "in_standard_filter": 1 },
+
+    { "fieldname": "cb_overview_1", "fieldtype": "Column Break" },
+    { "fieldname": "requester", "fieldtype": "Link", "label": "Requester", "options": "User", "read_only": 1 },
+    { "fieldname": "target_doctype", "fieldtype": "Link", "label": "Target DocType", "options": "DocType", "in_standard_filter": 1 },
+    { "fieldname": "target_name", "fieldtype": "Dynamic Link", "label": "Target Name", "options": "target_doctype", "in_global_search": 1 },
+    { "fieldname": "target_path", "fieldtype": "Data", "label": "Target Path / URL" },
+    { "fieldname": "tags", "fieldtype": "Tag", "label": "Tags" },
+
+    { "fieldname": "content_tab", "fieldtype": "Tab Break", "label": "Content" },
+    { "fieldname": "content_section", "fieldtype": "Section Break", "label": "Proposed Content", "options": "fa fa-pencil" },
+    { "fieldname": "current_summary", "fieldtype": "Small Text", "label": "Current Summary" },
+    { "fieldname": "proposed_changes", "fieldtype": "Text Editor", "label": "Proposed Changes" },
+    { "fieldname": "references", "fieldtype": "Small Text", "label": "References" },
+    { "fieldname": "attachment", "fieldtype": "Attach", "label": "Attachment" },
+    { "fieldname": "breaking_change", "fieldtype": "Check", "label": "Breaking Change", "default": "0" },
+
+    { "fieldname": "review_tab", "fieldtype": "Tab Break", "label": "Review" },
+    { "fieldname": "review_section", "fieldtype": "Section Break", "label": "Review & Decision", "options": "fa fa-check-square-o" },
+    { "fieldname": "reviewer", "fieldtype": "Link", "label": "Reviewer (KB Manager)", "options": "User", "read_only": 1 },
+    { "fieldname": "review_comment", "fieldtype": "Small Text", "label": "Review Comment" },
+    { "fieldname": "decided_by", "fieldtype": "Link", "label": "Decided By", "options": "User", "read_only": 1 },
+    { "fieldname": "decided_on", "fieldtype": "Datetime", "label": "Decided On", "read_only": 1 },
+
+    { "fieldname": "meta_tab", "fieldtype": "Tab Break", "label": "Meta" }
+  ],
+
+  "permissions": [
+    { "role": "System Manager", "read": 1, "write": 1, "create": 1, "delete": 1, "email": 1, "print": 1, "report": 1, "export": 1, "share": 1 },
+
+    { "role": "Knowledge Base Editor", "read": 1, "write": 1, "create": 1, "email": 1, "share": 1, "if_owner": 1 },
+
+    { "role": "KB Manager", "read": 1, "write": 1, "email": 1, "share": 1 },
+
+    { "role": "Support Team", "read": 1 },
+    { "role": "AI Admin", "read": 1, "write": 1, "create": 1, "delete": 1, "email": 1, "print": 1, "report": 1, "export": 1, "share": 1 },
+
+    { "role": "Auditor", "read": 1, "report": 1, "export": 1 },
+    { "role": "Product Analyst", "read": 1, "report": 1, "export": 1 }
+  ],
+
+  "states": [],
+  "links": [],
+  "actions": [],
+  "grid_page_length": 50
+}

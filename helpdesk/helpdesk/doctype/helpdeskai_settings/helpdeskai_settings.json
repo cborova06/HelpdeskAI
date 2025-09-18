@@ -1,0 +1,231 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-08-26 09:20:03.326743",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "license_tab",
+  "license_section",
+  "license_key",
+  "product_id",
+  "instance_id",
+  "expires_at",
+  "billing_grace_days",
+  "offline_grace_minutes",
+  "last_check_on",
+  "last_check_status",
+  "grace_started_on",
+  "grace_until",
+  "grace_locked_days",
+  "ai_tab",
+  "ai_section",
+  "default_provider",
+  "default_model",
+  "api_key",
+  "api_base_url",
+  "shadow_mode",
+  "integration_tab",
+  "integration_section",
+  "n8n_api_key",
+  "n8n_webhook_url",
+  "advanced_tab",
+  "advanced_section",
+  "log_level"
+ ],
+ "fields": [
+  {
+   "fieldname": "license_tab",
+   "fieldtype": "Tab Break",
+   "label": "License"
+  },
+  {
+   "fieldname": "license_section",
+   "fieldtype": "Section Break",
+   "label": "License Settings",
+   "options": "fa fa-key"
+  },
+  {
+   "fieldname": "license_key",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "License Key",
+   "reqd": 1
+  },
+  {
+   "fieldname": "instance_id",
+   "fieldtype": "Data",
+   "label": "Instance ID (hash)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "expires_at",
+   "fieldtype": "Datetime",
+   "label": "Expires At",
+   "read_only": 1
+  },
+  {
+   "default": "30",
+   "description": "0\u201330 aras\u0131 kabul edilir",
+   "fieldname": "billing_grace_days",
+   "fieldtype": "Int",
+   "label": "Billing Grace (days)",
+   "read_only_depends_on": "eval:doc.grace_locked_days>0"
+  },
+  {
+   "default": "0",
+   "description": "0\u20131440 aras\u0131 \u00f6nerilir",
+   "fieldname": "offline_grace_minutes",
+   "fieldtype": "Int",
+   "label": "Offline Grace (minutes)"
+  },
+  {
+   "fieldname": "last_check_on",
+   "fieldtype": "Datetime",
+   "label": "Last License Check",
+   "read_only": 1
+  },
+  {
+   "fieldname": "last_check_status",
+   "fieldtype": "Select",
+   "label": "Last Check Result",
+   "options": "VALID\nGRACE\nINVALID\nNETWORK_ERROR\nUNKNOWN",
+   "read_only": 1
+  },
+  {
+   "fieldname": "grace_started_on",
+   "fieldtype": "Datetime",
+   "label": "Grace Started On",
+   "read_only": 1
+  },
+  {
+   "fieldname": "grace_until",
+   "fieldtype": "Datetime",
+   "label": "Grace Until",
+   "read_only": 1
+  },
+  {
+   "description": "\u0130lk GRACE an\u0131nda sabitlenir",
+   "fieldname": "grace_locked_days",
+   "fieldtype": "Int",
+   "label": "Locked Grace (days)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ai_tab",
+   "fieldtype": "Tab Break",
+   "label": "AI Provider"
+  },
+  {
+   "fieldname": "ai_section",
+   "fieldtype": "Section Break",
+   "label": "Default AI Provider",
+   "options": "fa fa-magic"
+  },
+  {
+   "default": "Ollama",
+   "fieldname": "default_provider",
+   "fieldtype": "Select",
+   "label": "Provider",
+   "options": "OpenAI\nAnthropic\nOllama\nGemini\nDeepSeek\nOpenRouter\nQwen\nManus\nGroq\nOther"
+  },
+  {
+   "default": "GPT OSS",
+   "fieldname": "default_model",
+   "fieldtype": "Data",
+   "label": "Default Model"
+  },
+  {
+   "fieldname": "api_key",
+   "fieldtype": "Data",
+   "label": "API Key"
+  },
+  {
+   "fieldname": "api_base_url",
+   "fieldtype": "Data",
+   "label": "API Base URL"
+  },
+  {
+   "default": "0",
+   "fieldname": "shadow_mode",
+   "fieldtype": "Check",
+   "label": "Shadow Mode (AI only logs)"
+  },
+  {
+   "fieldname": "integration_tab",
+   "fieldtype": "Tab Break",
+   "label": "Integration"
+  },
+  {
+   "fieldname": "integration_section",
+   "fieldtype": "Section Break",
+   "label": "n8n Integration",
+   "options": "fa fa-random"
+  },
+  {
+   "fieldname": "n8n_api_key",
+   "fieldtype": "Data",
+   "label": "n8n Api Key"
+  },
+  {
+   "fieldname": "n8n_webhook_url",
+   "fieldtype": "Data",
+   "label": "n8n Webhook URL"
+  },
+  {
+   "fieldname": "advanced_tab",
+   "fieldtype": "Tab Break",
+   "label": "Advanced"
+  },
+  {
+   "fieldname": "advanced_section",
+   "fieldtype": "Section Break",
+   "label": "Advanced Options",
+   "options": "fa fa-cog"
+  },
+  {
+   "default": "INFO",
+   "fieldname": "log_level",
+   "fieldtype": "Select",
+   "label": "Log Level",
+   "options": "INFO\nDEBUG\nERROR\nWARNING"
+  },
+  {
+   "fieldname": "product_id",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Product ID",
+   "reqd": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2025-08-26 10:07:54.635221",
+ "modified_by": "Administrator",
+ "module": "Helpdesk",
+ "name": "HelpdeskAI Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "read": 1,
+   "role": "System Manager"
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "AI Admin",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

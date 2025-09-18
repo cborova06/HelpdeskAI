@@ -1,0 +1,273 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "naming_series:",
+ "creation": "2025-08-27 12:29:20.227665",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "overview_tab",
+  "overview_section",
+  "naming_series",
+  "subject",
+  "status",
+  "severity",
+  "cb_overview_1",
+  "owner_team",
+  "problem_manager",
+  "reported_on",
+  "analysis_tab",
+  "analysis_section",
+  "impact",
+  "root_cause",
+  "workaround",
+  "fix_plan",
+  "resolution_summary",
+  "timeline_tab",
+  "timeline_section",
+  "first_seen_on",
+  "mitigated_on",
+  "resolved_on",
+  "reopened_count",
+  "meta_tab",
+  "attachment"
+ ],
+ "fields": [
+  {
+   "fieldname": "overview_tab",
+   "fieldtype": "Tab Break",
+   "label": "Overview"
+  },
+  {
+   "fieldname": "overview_section",
+   "fieldtype": "Section Break",
+   "label": "Problem Overview",
+   "options": "fa fa-bug"
+  },
+  {
+   "default": "PRB-.YYYY.-.#####",
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "options": "PRB-.YYYY.-.#####",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "bold": 1,
+   "fieldname": "subject",
+   "fieldtype": "Data",
+   "in_global_search": 1,
+   "in_standard_filter": 1,
+   "label": "Subject",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "default": "Open",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "no_copy": 1,
+   "options": "Open\nInvestigating\nIdentified\nMonitoring\nResolved\nClosed",
+   "search_index": 1
+  },
+  {
+   "fieldname": "severity",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Severity",
+   "options": "Low\nMedium\nHigh\nCritical"
+  },
+  {
+   "fieldname": "cb_overview_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "owner_team",
+   "fieldtype": "Link",
+   "label": "Owner Team",
+   "options": "HD Team"
+  },
+  {
+   "fieldname": "problem_manager",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Problem Manager",
+   "options": "User"
+  },
+  {
+   "fieldname": "reported_on",
+   "fieldtype": "Datetime",
+   "label": "Reported On",
+   "read_only": 1
+  },
+  {
+   "fieldname": "analysis_tab",
+   "fieldtype": "Tab Break",
+   "label": "Analysis"
+  },
+  {
+   "fieldname": "analysis_section",
+   "fieldtype": "Section Break",
+   "label": "Analysis & RCA",
+   "options": "fa fa-search"
+  },
+  {
+   "fieldname": "impact",
+   "fieldtype": "Small Text",
+   "label": "Impact"
+  },
+  {
+   "fieldname": "root_cause",
+   "fieldtype": "Small Text",
+   "label": "Root Cause (RCA)"
+  },
+  {
+   "fieldname": "workaround",
+   "fieldtype": "Small Text",
+   "label": "Workaround"
+  },
+  {
+   "fieldname": "fix_plan",
+   "fieldtype": "Small Text",
+   "label": "Fix Plan"
+  },
+  {
+   "fieldname": "resolution_summary",
+   "fieldtype": "Text Editor",
+   "label": "Resolution Summary"
+  },
+  {
+   "fieldname": "timeline_tab",
+   "fieldtype": "Tab Break",
+   "label": "Timeline"
+  },
+  {
+   "fieldname": "timeline_section",
+   "fieldtype": "Section Break",
+   "label": "Milestones",
+   "options": "fa fa-clock-o"
+  },
+  {
+   "fieldname": "first_seen_on",
+   "fieldtype": "Datetime",
+   "label": "First Seen On",
+   "read_only": 1
+  },
+  {
+   "fieldname": "mitigated_on",
+   "fieldtype": "Datetime",
+   "label": "Mitigated On",
+   "read_only": 1
+  },
+  {
+   "fieldname": "resolved_on",
+   "fieldtype": "Datetime",
+   "label": "Resolved On",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "reopened_count",
+   "fieldtype": "Int",
+   "label": "Reopened Count",
+   "read_only": 1
+  },
+  {
+   "fieldname": "meta_tab",
+   "fieldtype": "Tab Break",
+   "label": "Meta"
+  },
+  {
+   "fieldname": "attachment",
+   "fieldtype": "Attach",
+   "label": "Attachment"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-08-27 14:01:07.394443",
+ "modified_by": "Administrator",
+ "module": "Helpdesk",
+ "name": "Problem Ticket",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Support Team",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "read": 1,
+   "role": "Agent",
+   "share": 1
+  },
+  {
+   "read": 1,
+   "role": "Knowledge Base Editor"
+  },
+  {
+   "read": 1,
+   "role": "KB Manager"
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "AI Admin",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Product Analyst"
+  },
+  {
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Auditor"
+  }
+ ],
+ "row_format": "Dynamic",
+ "search_fields": "status,subject,severity,owner_team",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "subject_field": "subject",
+ "title_field": "subject",
+ "track_changes": 1,
+ "track_seen": 1
+}
