@@ -1,0 +1,1 @@
+{"version":3,"file":"symbols-7dbf6ecf.js","sources":["../../../../desk/src/pages/ticket/symbols.ts"],"sourcesContent":["import { InjectionKey } from \"vue\";\nimport { Resource, Ticket } from \"@/types\";\n\nexport const ITicket: InjectionKey<Resource<Ticket>> = Symbol(\"Ticket\");\n"],"names":["ITicket"],"mappings":"AAGa,MAAAA,EAA0C,OAAO,QAAQ"}

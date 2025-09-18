@@ -1,0 +1,2 @@
+import{aZ as o,e as r,k as n,l as e}from"./index-62a62e6e.js";const l={class:"lucide lucide-merge",xmlns:"http://www.w3.org/2000/svg",width:"24",height:"24",viewBox:"0 0 24 24",fill:"none",stroke:"currentColor","stroke-width":"1.5","stroke-linecap":"round","stroke-linejoin":"round"};function s(a,t){return r(),n("svg",l,[...t[0]||(t[0]=[e("path",{d:"m8 6 4-4 4 4"},null,-1),e("path",{d:"M12 2v10.3a4 4 0 0 1-1.172 2.872L4 22"},null,-1),e("path",{d:"m20 22-5-5"},null,-1)])])}const d=o({name:"lucide-merge",render:s});export{d as L};
+//# sourceMappingURL=merge-36299d39.js.map
