@@ -1,14 +1,9 @@
 <div align="center" markdown="1">
 
-<img src=".github/hd-logo.svg" alt="Frappe Helpdesk logo" width="80"/>
 <h1>Frappe Helpdesk</h1>
 
 **Customer Service, Made Simple and Effective**
 
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/frappe/helpdesk)
-[![codecov](https://codecov.io/github/frappe/helpdesk/branch/develop/graph/badge.svg?token=8ZXHCY4G9U)](https://codecov.io/github/frappe/helpdesk)
-
-<a href="https://trendshift.io/repositories/12764" target="_blank"><img src="https://trendshift.io/api/badge/repositories/12764" alt="teableio%2Fteable | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
 </div>
 
 </div>
