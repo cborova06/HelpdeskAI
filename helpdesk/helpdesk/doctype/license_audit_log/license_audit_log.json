@@ -58,7 +58,7 @@
     { "fieldname": "overview_section", "fieldtype": "Section Break", "label": "Event Overview", "options": "fa fa-id-badge" },
     { "fieldname": "naming_series", "fieldtype": "Select", "label": "Series", "options": "LAL-.YYYY.-.########", "default": "LAL-.YYYY.-.########", "reqd": 1 },
     { "fieldname": "subject", "fieldtype": "Data", "label": "Subject", "in_global_search": 1, "bold": 1, "reqd": 1 },
-    { "fieldname": "action", "fieldtype": "Select", "label": "Action", "options": "Activate\nDeactivate\nVerify\nHeartbeat\nRefresh\nError", "in_list_view": 1, "in_standard_filter": 1, "reqd": 1 },
+    { "fieldname": "action", "fieldtype": "Select", "label": "Action", "options": "Activate\nDeactivate\nValidate\nVerify\nHeartbeat\nRefresh\nError", "in_list_view": 1, "in_standard_filter": 1, "reqd": 1 },
     { "fieldname": "status", "fieldtype": "Select", "label": "Status", "options": "OK\nFAIL\nWARN", "default": "OK", "in_list_view": 1, "in_standard_filter": 1 },
     { "fieldname": "source", "fieldtype": "Select", "label": "Source", "options": "Server\nClient\nn8n\nScheduler\nAdmin", "in_standard_filter": 1 },
 
@@ -94,13 +94,9 @@
 
   "permissions": [
     { "role": "System Manager", "read": 1, "write": 1, "create": 1, "delete": 1, "email": 1, "print": 1, "report": 1, "export": 1, "share": 1 },
-
     { "role": "AI Admin", "read": 1, "write": 1, "delete": 1, "email": 1, "print": 1, "report": 1, "export": 1, "share": 1 },
-
     { "role": "Integration Bot", "create": 1, "read": 1 },
-
     { "role": "Auditor", "read": 1, "report": 1, "export": 1 },
-
     { "role": "Product Analyst", "read": 1, "report": 1, "export": 1 }
   ],
 

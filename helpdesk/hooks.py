@@ -34,7 +34,7 @@ scheduler_events = {
         "helpdesk.helpdesk.doctype.hd_ticket.hd_ticket.close_tickets_after_n_days"
     ],
     "hourly": [
-        "helpdesk.api.license.verify_and_update"
+        "helpdesk.api.license.validate_and_update"
 
     ],
 }

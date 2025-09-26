@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# TR: HelpdeskAI Lisans Mekanizması Ünite Testleri
+# TR: HelpdeskAI Yeni Lisans Mekanizması Ünite Testleri (activate / validate / deactivate + grace)
 import json
 from datetime import timedelta
 from unittest.mock import patch
@@ -14,18 +14,16 @@ from helpdesk.api import license as license_api
 
 class TestLicenseAPI(FrappeTestCase):
     def setUp(self):
-        frappe.set_user("Administrator")
+        frappe.set_user("Administrator")  # TR: Test kullanıcısı
 
-        # TR: Settings'i sıfırla
-        st = frappe.get_single("HelpdeskAI Settings")
-        st.license_key = "TEST-KEY-XXXX-1234"
-        st.instance_id = ""              # TR: otomatik üretim test edilecek
-        st.expires_at = None
-        st.offline_grace_minutes = 0
-        st.activation_url = "https://brvsoftware.com/wp-json/brv-slm/v1/activate-license"
-        st.deactivation_url = "https://brvsoftware.com/wp-json/brv-slm/v1/deactivate-license"
-        st.verification_url = "https://brvsoftware.com/wp-json/brv-slm/v1/verify-license"
-        # TR: alan mevcutsa 30 olarak yaz; yoksa kod 30 varsayıyor
+        # TR: Settings'i deterministik hale getir
+        st = frappe.get_single("HelpdeskAI Settings")  # TR: Single settings
+        st.license_key = "TEST-KEY-XXXX-1234"  # TR: Sahte lisans
+        st.device_fingerprint = ""  # TR: İlk çağrıda üretilecek
+        st.activation_token = None  # TR: Aktivasyon sonrası dolacak
+        st.last_ok_on = None  # TR: Grace referansı
+        st.expires_at = None  # TR: Opsiyonel sunucu alanı
+        # TR: Alan mevcutsa 30 gün olarak set edilir; yoksa kod 30 varsayıyor
         try:
             st.billing_grace_days = 30
         except Exception:
@@ -43,125 +41,136 @@ class TestLicenseAPI(FrappeTestCase):
 
     class DummyResp:
         def __init__(self, url, json_data, ok=True, status_code=200):
-            self.url = url
-            self._json = json_data
-            self.ok = ok
-            self.status_code = status_code
-            self.content = json.dumps(json_data).encode()
+            self.url = url  # TR: requests.Response.url
+            self._json = json_data  # TR: Dönen JSON
+            self.ok = ok  # TR: HTTP 2xx mı
+            self.status_code = status_code  # TR: HTTP kodu
+            self.content = json.dumps(json_data).encode()  # TR: bytes içerik
 
         def json(self):
-            return self._json
+            return self._json  # TR: JSON accessor
 
     # ---- Aktivasyon ---------------------------------------------------------
 
     @patch("helpdesk.api.license.requests.post")
     def test_activate_success_updates_settings_cache_and_audit(self, post):
-        # TR: Sunucu başarı döndürür + expires_at verir
-        data = {"success": True, "license_status": "active", "expires_at": (now_datetime() + timedelta(days=365)).isoformat()}
+        # TR: Sunucu başarı + activation_token + exp döner
+        data = {
+            "ok": True,  # TR: yeni API: ok
+            "status": "active",  # TR: durum
+            "activation_token": "TOK-123",  # TR: saklanacak token
+            "exp": (now_datetime() + timedelta(days=365)).isoformat(),  # TR: opsiyonel son kullanma
+        }
         post.return_value = self.DummyResp(
-            "https://brvsoftware.com/wp-json/brv-slm/v1/activate-license", data, ok=True, status_code=200
+            "https://brvsoftware.com/wp-json/lic/v1/activate", data, ok=True, status_code=200
         )
 
-        res = license_api.activate()
-        self.assertTrue(res.get("ok"))
-        self.assertEqual(frappe.cache().get_value(license_api.CACHE_STATUS_KEY), "valid")
+        res = license_api.activate()  # TR: çağrı
+        self.assertTrue(res.get("ok"))  # TR: başarılı
+        self.assertEqual(frappe.cache().get_value(license_api.CACHE_STATUS_KEY), "valid")  # TR: cache valid
 
-        # TR: expires_at settings'e yazılmış olmalı
-        st = frappe.get_single("HelpdeskAI Settings")
-        self.assertTrue(st.expires_at)
-
-        # TR: instance_id otomatik üretilmiş olmalı
-        self.assertTrue(st.instance_id)
-
-        # TR: Audit kaydı yazılmış olmalı
-        self.assertGreater(frappe.db.count("License Audit Log"), 0)
+        st = frappe.get_single("HelpdeskAI Settings")  # TR: güncel settings
+        self.assertTrue(st.activation_token)  # TR: token yazıldı
+        self.assertTrue(st.device_fingerprint)  # TR: fingerprint üretildi
+        self.assertEqual(len(st.device_fingerprint), 64)  # TR: SHA256 hex
+        self.assertGreater(frappe.db.count("License Audit Log"), 0)  # TR: audit yazıldı
 
     @patch("helpdesk.api.license.requests.post")
     def test_activate_failure_sets_invalid_and_audit(self, post):
-        data = {"success": False, "status": "error"}
+        data = {"ok": False, "error": "invalid_key"}  # TR: yeni API hata formatı
         post.return_value = self.DummyResp(
-            "https://brvsoftware.com/wp-json/brv-slm/v1/activate-license", data, ok=True, status_code=200
+            "https://brvsoftware.com/wp-json/lic/v1/activate", data, ok=True, status_code=200
         )
 
-        res = license_api.activate()
-        self.assertFalse(res.get("ok"))
-        self.assertEqual(frappe.cache().get_value(license_api.CACHE_STATUS_KEY), "invalid")
-        self.assertGreater(frappe.db.count("License Audit Log"), 0)
+        res = license_api.activate()  # TR: çağrı
+        self.assertFalse(res.get("ok"))  # TR: başarısız
+        self.assertEqual(frappe.cache().get_value(license_api.CACHE_STATUS_KEY), "invalid")  # TR: cache invalid
+        self.assertGreater(frappe.db.count("License Audit Log"), 0)  # TR: audit yazıldı
 
     # ---- Deaktivasyon -------------------------------------------------------
 
     @patch("helpdesk.api.license.requests.post")
     def test_deactivate_success_sets_invalid_and_audit(self, post):
-        data = {"success": True, "status": "deactivated"}
+        # TR: Ön şart: token varmış gibi davran
+        st = frappe.get_single("HelpdeskAI Settings")
+        st.activation_token = "TOK-XYZ"
+        st.save(ignore_permissions=True)
+
+        data = {"ok": True, "status": "deactivated"}  # TR: yeni API
         post.return_value = self.DummyResp(
-            "https://brvsoftware.com/wp-json/brv-slm/v1/deactivate-license", data, ok=True, status_code=200
+            "https://brvsoftware.com/wp-json/lic/v1/deactivate", data, ok=True, status_code=200
         )
 
-        res = license_api.deactivate()
-        self.assertTrue(res.get("ok"))
-        self.assertEqual(frappe.cache().get_value(license_api.CACHE_STATUS_KEY), "invalid")
-        self.assertGreater(frappe.db.count("License Audit Log"), 0)
+        res = license_api.deactivate()  # TR: çağrı
+        self.assertTrue(res.get("ok"))  # TR: başarılı
+        self.assertEqual(frappe.cache().get_value(license_api.CACHE_STATUS_KEY), "invalid")  # TR: cache invalid
+
+        st = frappe.get_single("HelpdeskAI Settings")  # TR: settings kontrol
+        self.assertFalse(st.activation_token)  # TR: token temizlendi
+        self.assertGreater(frappe.db.count("License Audit Log"), 0)  # TR: audit yazıldı
 
     # ---- Doğrulama: geçerli -------------------------------------------------
 
     @patch("helpdesk.api.license.requests.post")
-    def test_verify_valid_sets_cache_valid(self, post):
-        data = {"valid": True, "license_status": "active"}
+    def test_validate_valid_sets_cache_valid_and_updates_last_ok(self, post):
+        data = {"ok": True, "status": "active", "exp": (now_datetime() + timedelta(days=90)).isoformat()}
         post.return_value = self.DummyResp(
-            "https://brvsoftware.com/wp-json/brv-slm/v1/verify-license", data, ok=True, status_code=200
+            "https://brvsoftware.com/wp-json/lic/v1/validate", data, ok=True, status_code=200
         )
 
-        res = license_api.verify()
-        self.assertTrue(res.get("ok"))
-        self.assertEqual(res.get("status"), "valid")
-        self.assertEqual(frappe.cache().get_value(license_api.CACHE_STATUS_KEY), "valid")
+        res = license_api.validate()  # TR: çağrı
+        self.assertTrue(res.get("ok"))  # TR: başarılı
+        self.assertEqual(res.get("status"), "valid")  # TR: durum valid
+        self.assertEqual(frappe.cache().get_value(license_api.CACHE_STATUS_KEY), "valid")  # TR: cache valid
 
-    # ---- Doğrulama: grace (30 gün) -----------------------------------------
+        st = frappe.get_single("HelpdeskAI Settings")
+        self.assertIsNotNone(st.last_ok_on)  # TR: grace referansı güncellendi
+
+    # ---- Doğrulama: invalid -------------------------------------------------
 
     @patch("helpdesk.api.license.requests.post")
-    def test_verify_grace_within_30_days_ok(self, post):
-        # TR: Sunucu 'active' döndürmüyor ama expiry geçmiş + 30g içinde
-        expired = now_datetime() - timedelta(days=5)
-        data = {"success": False, "status": "expired", "expires_at": expired.isoformat()}
+    def test_validate_invalid_sets_cache_invalid(self, post):
+        data = {"ok": False, "error": "expired"}  # TR: yeni API invalid
         post.return_value = self.DummyResp(
-            "https://brvsoftware.com/wp-json/brv-slm/v1/verify-license", data, ok=True, status_code=200
+            "https://brvsoftware.com/wp-json/lic/v1/validate", data, ok=True, status_code=200
         )
 
-        res = license_api.verify()
-        self.assertTrue(res.get("ok"))
-        self.assertEqual(res.get("status"), "grace")
-        self.assertEqual(frappe.cache().get_value(license_api.CACHE_STATUS_KEY), "grace")
+        res = license_api.validate()  # TR: çağrı
+        self.assertFalse(res.get("ok"))  # TR: başarısız
+        self.assertEqual(res.get("status"), "expired")  # TR: hata mesajı geri döner
+        self.assertEqual(frappe.cache().get_value(license_api.CACHE_STATUS_KEY), "invalid")  # TR: cache invalid
 
     # ---- Doğrulama: revoked -> invalid -------------------------------------
 
     @patch("helpdesk.api.license.requests.post")
-    def test_verify_revoked_is_invalid(self, post):
-        data = {"success": False, "status": "revoked"}
+    def test_validate_revoked_is_invalid(self, post):
+        data = {"ok": False, "status": "revoked"}  # TR: revoke
         post.return_value = self.DummyResp(
-            "https://brvsoftware.com/wp-json/brv-slm/v1/verify-license", data, ok=True, status_code=200
+            "https://brvsoftware.com/wp-json/lic/v1/validate", data, ok=True, status_code=200
         )
 
-        res = license_api.verify()
-        self.assertFalse(res.get("ok"))
-        self.assertEqual(res.get("status"), "invalid")
-        self.assertEqual(frappe.cache().get_value(license_api.CACHE_STATUS_KEY), "invalid")
+        res = license_api.validate()  # TR: çağrı
+        self.assertFalse(res.get("ok"))  # TR: başarısız
+        self.assertEqual(res.get("status"), "invalid")  # TR: invalid
+        self.assertEqual(frappe.cache().get_value(license_api.CACHE_STATUS_KEY), "invalid")  # TR: cache invalid
 
-    # ---- Doğrulama: network error + yerel grace -----------------------------
+    # ---- Doğrulama: network error + grace (last_ok_on + 30g) ---------------
 
     @patch("helpdesk.api.license.requests.post", side_effect=Exception("network down"))
-    def test_verify_network_error_uses_local_grace(self, post):
-        # TR: Settings'e yerel expiry yaz, 30g içinde olsun
+    def test_validate_network_error_uses_last_ok_grace(self, post):
+        # TR: Settings'e last_ok_on yaz, 30 gün içinde olsun
         st = frappe.get_single("HelpdeskAI Settings")
-        st.expires_at = add_days(now_datetime(), -2)  # TR: 2 gün önce bitti
+        st.last_ok_on = add_days(now_datetime(), -5)  # TR: 5 gün önce başarı görmüş
         try:
             st.billing_grace_days = 30
         except Exception:
             pass
         st.save(ignore_permissions=True)
 
-        res = license_api.verify()
-        self.assertTrue(res.get("ok"))
-        self.assertEqual(res.get("status"), "grace")
+        res = license_api.validate()  # TR: çağrı
+        self.assertTrue(res.get("ok"))  # TR: grace kabul
+        self.assertEqual(res.get("status"), "grace")  # TR: durum grace
+        self.assertEqual(frappe.cache().get_value(license_api.CACHE_STATUS_KEY), "grace")  # TR: cache grace
 
     # ---- Gatekeeper ---------------------------------------------------------
 
@@ -184,12 +193,11 @@ class TestLicenseAPI(FrappeTestCase):
 
     @patch("helpdesk.api.license.requests.post")
     def test_domain_enforced_only_brvsoftware(self, post):
-        # TR: Artık URL'ler sabit; sabiti kötü domaine çevir ve PermissionError bekle
+        # TR: Sabiti kötü domaine çevir ve PermissionError bekle
         import helpdesk.api.license as lic
         lic.DEFAULT_ACTIVATE_URL = "https://evil.example.com/api/activate"
 
         with self.assertRaises(frappe.PermissionError):
-            license_api.activate()
+            license_api.activate()  # TR: domain kontrolü post öncesi patlamalı
 
-        # TR: Domain kontrolü post’tan önce patladığı için HTTP çağrısı olmamalı
-        post.assert_not_called()
+        post.assert_not_called()  # TR: HTTP çağrısı olmamalı
